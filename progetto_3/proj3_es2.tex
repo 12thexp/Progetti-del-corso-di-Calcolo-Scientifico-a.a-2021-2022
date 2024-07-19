@@ -1,0 +1,230 @@
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{xcolor}
+
+%opening
+\title{Progetto nr. 3}
+\author{Alyssa Pezzutti, Nicole Santero}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Esercizio 1}
+
+\section{Esercizio 2}
+
+\subsection{}
+Discretizziamo il problema su una griglia quadrata, in modo da poter considerare uguali gli step $\bigtriangleup x$ e $\bigtriangleup y$. Sia quindi $h = \bigtriangleup x = \bigtriangleup y $.
+
+Manipoliamo il sistema per ricondurci ad una equazione ad un passo:
+Inannanzitutto sommiamo le equazioni, ottenendo:
+\begin{equation}
+	\frac{u^{k+1}_{i,j}-u^k_{i,j}}{\bigtriangleup t} = 2 \frac{u^{k+\frac{1}{2}}_{i-1,j} -2u^{k+\frac{1}{2}}_{i,j} + u^{k+\frac{1}{2}}_{i+1,j}}{h^2} + \frac{u^{k}_{i,j-1} -2u^{k}_{i,j} + u^{k}_{i,j+1}}{h^2} + \frac{u^{k+1}_{i,j-1} -2u^{k+1}_{i,j} + u^{k+1}_{i,j+1}}{h^2} + f^{k+\frac{1}{2}}_{i,j}
+\end{equation}
+
+Osserviamo che vale l'uguaglianza $u^{k+\frac{1}{2}} = \frac{ u^{k+1}+ u^{k}}{2}$, e sostituiamo i termini $u^{k+\frac{1}{2}}$ in questo modo. Avremo quindi
+\begin{equation}
+\frac{u^{k+\frac{1}{2}}_{i-1,j} -2u^{k+\frac{1}{2}}_{i,j} + u^{k+\frac{1}{2}}_{i+1,j}}{h^2} = \frac{1}{2} \frac{u^{k+1}_{i-1,j} + u^{k}_{i-1,j} - 2(u^{k+1}_{i,j} + u^{k}_{i,j}) + u^{k+1}_{i+1,j} + u^{k}_{i+1,j}}{h^2}
+\end{equation}
+
+Inseriamo questa quantita' in (1), che cosi' diventa
+
+\begin{equation}
+\begin{split}
+\frac{u^{k+1}_{i,j}-u^k_{i,j}}{\bigtriangleup t} \quad = \quad  \frac{u^{k+1}_{i-1,j} + u^{k}_{i-1,j} - 2(u^{k+1}_{i,j} + u^{k}_{i,j}) + u^{k+1}_{i+1,j} + u^{k}_{i+1,j}}{h^2} +\\ \frac{u^{k}_{i,j-1} -2u^{k}_{i,j} + u^{k}_{i,j+1}}{h^2} + \frac{u^{k+1}_{i,j-1} -2u^{k+1}_{i,j} + u^{k+1}_{i,j+1}}{h^2} + f^{k+\frac{1}{2}}_{i,j}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\frac{u^{k+1}_{i,j}-u^k_{i,j}}{\bigtriangleup t}  \quad = \quad  \frac{u^{k}_{i-1,j} -2u^{k}_{i,j} + u^{k}_{i+1,j}}{h^2}  +  \frac{u^{k}_{i,j-1} -2u^{k}_{i,j} + u^{k}_{i,j+1}}{h^2}  + \\
+\frac{u^{k+1}_{i-1,j} -2u^{k+1}_{i,j} + u^{k+1}_{i+1,j}}{h^2}  +  \frac{u^{k+1}_{i,j-1} -2u^{k+1}_{i,j}  +  u^{k+1}_{i,j+1}}{h^2} + f^{k+\frac{1}{2}}_{i,j}
+\end{split}
+\end{equation}
+Moltiplichiamo (4) per $\bigtriangleup t$ e la riscriviamo come
+
+\begin{equation}
+\begin{split}
+u^{k+1}_{i,j}  \quad = \quad  u^k_{i,j}+ \quad  \frac{\bigtriangleup t}{h^2} (u^{k}_{i-1,j} -2u^{k}_{i,j} + u^{k}_{i+1,j})  \quad + \quad 
+\frac{\bigtriangleup t}{h^2} (u^{k}_{i,j-1} -2u^{k}_{i,j} + u^{k}_{i,j+1})  \quad + \\
+\quad + \quad \frac{\bigtriangleup t}{h^2} (u^{k+1}_{i-1,j} -2u^{k+1}_{i,j} + u^{k+1}_{i+1,j}) \quad + \quad \frac{\bigtriangleup t}{h^2} (u^{k+1}_{i,j-1} -2u^{k+1}_{i,j} + u^{k+1}_{i,j+1}) \quad + \quad \bigtriangleup t f^{k+\frac{1}{2}}_{i,j}
+\end{split}
+\end{equation}
+
+Si tratta quindi di un'equazione a un passo implicita. Vogliamo adesso calcolare l'errore di troncamento: sostituiamo ai termini approssimati $u$ la soluzione esatta, evidenziando gli incrementi al variare degli indici, per poi scriverne lo sviluppo di Taylor. Omettiamo i pedici per non appesantire la notazione, in ogni caso lo sviluppo sara' centrato in $(t_k, x_{ij}, y_{ij})$: passare da $t_k$ a $t_{k+1}$ equivale a un incremento di $\bigtriangleup t$; passare da $u_{i,j}$ a $u_{i+1,j}$ equivale a un incremento di $h$ in $x$ (analogo per $j$, con l'incremento nella direzione $y$).
+\begin{equation}
+\begin{split}
+u(t+ \bigtriangleup t, x, y)  \quad = \quad  u(t, x, y)  \quad + \quad  \frac{\bigtriangleup t}{h^2} \left[u(t, x-h, y) -2u(t,x,y) + u(t, x+h, y)\right]  \quad +\\
++ \quad \frac{\bigtriangleup t}{h^2} \left[u(t, x, y-h) -2u(t,x,y) + u(t, x, y+h)\right]  \quad +\\
++ \quad \frac{\bigtriangleup t}{h^2} \left[u(t+\bigtriangleup t, x-h, y) -2u(t+ \bigtriangleup t,x,y) + u(t+ \bigtriangleup t, x+h, y)\right]  \quad +\\
++ \quad \frac{\bigtriangleup t}{h^2} \left[u(t +\bigtriangleup t, x, y-h) -2u(t+\bigtriangleup t,x,y) + u(t+\bigtriangleup t, x, y+h)\right]  \quad +  \quad \bigtriangleup t f^{k+\frac{1}{2}}_{i,j}
+\end{split}
+\end{equation}
+
+Consideriamo il trinomio
+\begin{center}
+	$\frac{\bigtriangleup t}{h^2} (u^{k+1}_{i-1,j} -2u^{k+1}_{i,j} + u^{k+1}_{i+1,j})$
+\end{center}
+sostituiamo la soluzione esatta nelle $u$, e sviluppiamo ciascun termine fino al IV ordine:
+
+\begin{equation}
+\begin{split}
+	u^{k+1}_{i+1,j} = u(t,x,y) + ((\bigtriangleup t) u_t + h u_x) + (\frac{h^2}{2} u_{xx} + \frac{(\bigtriangleup t)^2}{2} u_{tt} + h (\bigtriangleup t) u_{tx})\\ + (\frac{(\bigtriangleup t)^3}{6} + 3h \frac{(\bigtriangleup t)^2}{2} u_{ttx}  + 3\frac{h^2}{2} (\bigtriangleup t) u_{txx} + \frac{h^3}{6} u_{xxx})\\ + \frac{(\bigtriangleup t)^4}{4!} u_{tttt} + \frac{h^4}{4!} u_{xxxx} - \frac{4 (\bigtriangleup t)^3 h}{6} u_{tttx} + \frac{4 (\bigtriangleup t) h^3}{6} u_{txxx} + \frac{6 (\bigtriangleup t)^2 h^2}{4} u_{ttxx}\\ + O(h^4) + O((\bigtriangleup t)^4) + O((\bigtriangleup t)^3 h) + O((\bigtriangleup t)^2 h^2) + O((\bigtriangleup t) h^3) + O((\bigtriangleup t)^4)
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+u^{k+1}_{i,j} = u(t,x,y) + (\bigtriangleup t) u_t + \frac{(\bigtriangleup t)^2}{2} u_{tt} + (\frac{(\bigtriangleup t)^3}{3!}) u_{ttt} + (\frac{(\bigtriangleup t)^4}{4!}) u_{tttt}\\ + O(h^3) + O((\bigtriangleup t)^3) + O((\bigtriangleup t)^2 h^2) + O((\bigtriangleup t)^2 h^2) + O((\bigtriangleup t) h^3) + O((\bigtriangleup t)^4) + O(h^4)
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+u^{k+1}_{i-1,j} = u(t,x,y) + ((\bigtriangleup t) u_t - h u_x) + (\frac{h^2}{2} u_{xx} + (\frac{(\bigtriangleup t)^2}{2} u_{tt} - h (\bigtriangleup t) u_{tx}) \\+ (\frac{(\bigtriangleup t)^3}{6} - 3h \frac{(\bigtriangleup t)^2}{2} u_{ttx}  + 3\frac{h^2}{2} (\bigtriangleup t) u_{txx} - \frac{h^3}{6} u_{xxx})\\ + \frac{(\bigtriangleup t)^4}{4!} u_{tttt} + \frac{h^4}{4!} u_{xxxx} - \frac{4 (\bigtriangleup t)^3 h}{6} u_{tttx} - \frac{4 (\bigtriangleup t) h^3}{6} u_{txxx} + \frac{6 (\bigtriangleup t)^2 h^2}{4} u_{ttxx}\\ + O(h^4) + O((\bigtriangleup t)^4) + O((\bigtriangleup t)^3 h) + O((\bigtriangleup t)^2 h^2) + O((\bigtriangleup t) h^3) + O((\bigtriangleup t)^4)
+\end{split}
+\end{equation}
+
+sommando i tre sviluppi:
+\begin{equation}
+	\bigtriangleup t\frac{(u^{k+1}_{i-1,j} -2u^{k+1}_{i,j} + u^{k+1}_{i+1,j})}{h^2}  = (\bigtriangleup t)u_{xx} + 3(\bigtriangleup t)^2 u_{txx} + O(h^3) + O((\bigtriangleup t)^3) + ...
+\end{equation}
+quindi l'errore di troncamento per questo trinomio vale:
+\begin{equation}
+\tau^{k+1}_{dx} = \frac{(u^{k+1}_{i-1,j} -2u^{k+1}_{i,j} + u^{k+1}_{i+1,j})}{h^2}  - u_{xx} = 3(\bigtriangleup t) u_{txx} + O(
+h^3 \bigtriangleup t) + O((\bigtriangleup t)^2) + ...
+\end{equation}
+
+in modo analogo si possono sviluppare tutte le componenti di (6), e sottrarre l'equazione esatta per ricavare l'errore di troncamento dell'equazione (5), che quindi vale
+\begin{equation}
+	\tau = c_1 (\bigtriangleup t) + c_2 h^2 + O((\bigtriangleup t)^2) + O(h^3) + ...
+\end{equation}
+con $c_1, c_2 \in \textbf{R}$.\\
+In realta', trattandosi di una semidiscretizzazione in tempo, per calcolare l'ordine in tempo possiamo considerare la parte spaziale come continua anziche' discreta, guadagnando cosi' un ordine in tempo. Dunque il metodo dovrebbe avere ordine teorico 2 sia in spazio che in tempo.
+Inoltre il metodo e' consistente in quanto, per
+\begin{center}
+	$\bigtriangleup t \rightarrow 0$\\
+	$h \rightarrow 0$
+\end{center}
+si ha
+\begin{center}
+	$\tau (\bigtriangleup t, h) \rightarrow 0$
+\end{center}
+
+\subsection{}
+Consideriamo ora le equazioni di partenza. Definiamo $\mu := \frac{\bigtriangleup t}{h^2}$. Separiamo le quantita' note da quelle incognite, portando queste ultime a sinistra dell'uguaglianza, ottenendo cosi':
+
+\begin{equation}
+	\begin{cases}
+	-\mu u^{k+\frac{1}{2}}_{i-1,j} + (1+2\mu)u^{k+\frac{1}{2}}_{i,j} -\mu u^{k+\frac{1}{2}}_{i+1,j} = \mu u^{k}_{i,j-1} + (1-2\mu) u^{k}_{i,j} + \mu u^{k}_{i,j+1} + \frac{\bigtriangleup t}{2} f^{k+\frac{1}{2}}_{i,j}\\ 
+	
+	-\mu u^{k+1}_{i,j-1} + (1+2\mu)u^{k+1}_{i,j} -\mu u^{k+1}_{i,j+1} = \mu u^{k+\frac{1}{2}}_{i-1,j} + (1-2\mu) u^{k+\frac{1}{2}}_{i,j} + \mu u^{k}_{i,j} + \frac{\bigtriangleup t}{2} f^{k+\frac{1}{2}}_{i,j}
+	
+	\end{cases}
+\end{equation}
+
+Abbiamo ritenuto piu' opportuno separare le equazioni in piu' sistemi, nel seguente modo:
+
+Discretizziamo entrambi gli assi x,y con $n$ nodi ciascuno, ottenendo una griglia quadrata con $n^2$ punti. Avremo quindi $n-2$ punti interni per lato.
+Sia A la matrice $(n-2) \times (n-2)$ di iterazione del lato sinistro
+\begin{center}
+	$
+	A = \begin{bmatrix}
+		1+2\mu & -\mu & 0 & 0 & \cdots & 0 \\
+		-\mu & 1+2\mu & -\mu & 0 & \cdots & 0\\
+		0 & -\mu & 1+2\mu & -\mu & \cdots & 0\\
+		\vdots &  & \ddots & \ddots  & \ddots\\
+		\\
+		& &  &  &   & -\mu\\
+		0 &  &  \cdots & 0  & -\mu & 1+2\mu\\ 
+	\end{bmatrix}
+	$
+\end{center}
+Per la prima equazione:\\
+Fissiamo l'indice di colonna $j = 1$ e iteriamo su $i$. Al variare di $i = 1,...,n-2$  otteniamo il sistema
+\begin{equation}
+	A {\begin{pmatrix}
+	u_{1,1}\\
+	u_{2,1}\\
+	\vdots\\
+	u_{n-2,1}
+	\end{pmatrix}}^{k+\frac{1}{2}} = 
+	\begin{cases}
+	(1-2\mu)u^k_{1,1} + \mu u^k_{1,2} + \frac{\bigtriangleup t}{2} f^{k+\frac{1}{2}}_{1,1} + \mu \color{blue}{(u^k_{1,0} + u^{k+\frac{1}{2}}_{0,1})}\\
+	(1-2\mu)u^k_{2,1} + \mu u^k_{2,2} + \frac{\bigtriangleup t}{2} f^{k+\frac{1}{2}}_{2,1} + \mu \color{blue}{(u^k_{2,0})}\\
+	\quad \vdots\\
+	(1-2\mu)u^k_{n-3,1} + \mu u^k_{n-3,2} + \frac{\bigtriangleup t}{2} f^{k+\frac{1}{2}}_{n-3,1} + \mu \color{blue}{(u^k_{n-3,0})}\\
+	(1-2\mu)u^k_{n-2,1} + \mu u^k_{n-2,2} + \frac{\bigtriangleup t}{2} f^{k+\frac{1}{2}}_{n-2,1} + \mu \color{blue}{(u^k_{n-2,0} + u^{k+\frac{1}{2}}_{n-1,1})}\\
+	\end{cases}
+\end{equation}
+dove le quantita' in blu sono date dalle condizioni al bordo.
+Analogamente, per $j = 2,...,n-3 $ avremo i sistemi:
+\begin{equation}
+A {\begin{pmatrix}
+	u_{1,j}\\
+	u_{2,j}\\
+	\vdots\\
+	u_{n-2,j}
+	\end{pmatrix}}^{k+\frac{1}{2}} = 
+\begin{cases}
+\mu u^k_{1,j-1} + (1-2\mu)u^k_{1,j} + \mu u^k_{1,j+1} + \frac{\bigtriangleup t}{2}f^{k+\frac{1}{2}}_{1,j} + \mu \color{blue}{(u^{k+\frac{1}{2}}_{0,j})}\\
+\mu u^k_{2,j-1} + (1-2\mu)u^k_{2,j} + \mu u^k_{2,j+1} + \frac{\bigtriangleup t}{2}f^{k+\frac{1}{2}}_{2,j}\\
+\quad \vdots\\
+\mu u^k_{n-3,j-1} + (1-2\mu)u^k_{n-3,j} + \mu u^k_{n-3,j+1} + \frac{\bigtriangleup t}{2}f^{k+\frac{1}{2}}_{n-3,j}\\
+\mu u^k_{n-2,j-1} + (1-2\mu)u^k_{n-2,j} + \mu u^k_{n-2,j+1} + \frac{\bigtriangleup t}{2}f^{k+\frac{1}{2}}_{n-2,j} + \mu \color{blue}{(u^{k+\frac{1}{2}}_{n-1,j})}\\
+\end{cases}
+\end{equation}
+il caso $j = n-2$ e' analogo a (14).\\
+Chiamiamo $bcs$ il vettore delle condizioni al bordo, e $b$ il restanto lato destro delle equazioni.
+Ciascun sistema e' quindi della forma
+\begin{center}
+	$Au^{k+\frac{1}{2}}_j = b + bcs$
+\end{center}
+ed essendo A tridiagonale possiamo risolverli con l'algoritmo di Thomas. Ciascuna soluzione corrisponde ad una colonna della matrice  $u^{k+\frac{1}{2}}$, di dimensioni $(n-2) \times (n-2)$, che corrisponde alla soluzione approssimata sulla griglia interna al tempo $k+\frac{1}{2}$.\\
+
+Essendo ora la matrice $u^{k+\frac{1}{2}}$ nota, la inseriamo nella seconda equazione per calcolare $u^{k+1}$.
+Questa volta fissiamo l'indice di riga $i$ e facciamo variare l'indice di colonna $j = 2,...,n-2$.
+Le equazioni che si ottengono sono pressoche' identiche a quelle precedenti, con $u^{k+\frac{1}{2}}$ sul lato destro e $u^{k+1}$ sul lato sinistro, e indici $i$ e $j$ scambiati.\\
+Per ciascuna equazione dobbiamo quindi risolvere $n-2$ sistemi lineari. In totale abbiamo quindi $2(n-2)$ sistemi. Ogni sistema viene risolto dall'algoritmo di Thomas in $O(n-2)$ operazioni. Il costo computazionale totale dovrebbe quindi essere $O((n-2)^2)$.
+
+\subsection{}
+Innanzitutto ricaviamo le funzioni che descrivono le condizioni al bordo imponendo i valori di x e y a seconda dei casi:\\
+$ gN = u(x,1,t) = \frac{1}{\sqrt{1+4t}} e^{(-\frac{x^2+1}{1+4t})}\\
+gS = u(x,0,t) = \frac{1}{\sqrt{1+4t}} e^{(-\frac{x^2}{1+4t})}\\
+gO = u(0,y,t) = \frac{1}{\sqrt{1+4t}} e^{(-\frac{y^2}{1+4t})}\\
+gE = u(1,y,t) = \frac{1}{\sqrt{1+4t}} e^{(-\frac{y^2+1}{1+4t})}
+$\\
+
+e il termine sorgente:\\
+$f(x,y,t) = \frac{2}{(1+4t)^{\frac{3}{2}}} e^{(-\frac{x^2+y^2}{1+4t})}$\\
+
+Facciamo notare che nel codice Matlab le funzioni $gN$ e $gS$ sono scambiate per tenere conto del fatto che la rappresentazione matriciale della griglia non corrisponde alla griglia teorica nel piano cartesiano.\\
+
+Purtroppo non siamo state in grado di verificare sperimentalmente l'ordine del metodo. Il programma infatti approssima correttamente la soluzione esatta (come si vede dai grafici prodotti e dal fatto che l'errore si mantiene sempre < $10^{-2}$), ma aumentando il numero di nodi e/o raffinando il tempo l'errore aumenta. Cio' si discosta dalle aspettative. Possiamo ipotizzare si tratti di un errore nel codice o di errori di floating, ma non siamo in grado di dare una motivazione precisa.
+
+Alleghiamo comunque i grafici della soluzione approssimata e dell'errore che illustrano quanto detto:
+\begin{figure}[H]
+	\centering
+	\includegraphics[totalheight=8cm]{grafico.png}
+	\caption{Soluzione approssimata}
+	\label{fig:verticalcell}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[totalheight=8cm]{errore_es2.png}
+	\caption{Andamento dell'errore}
+	\label{fig:verticalcell}
+\end{figure}
+
+
+
+\end{document}
